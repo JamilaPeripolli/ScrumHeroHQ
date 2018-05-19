@@ -1,4 +1,4 @@
-package com.scrumhero.ScrumHeroHQ;
+package com.scrumhero.scrumherohq;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
