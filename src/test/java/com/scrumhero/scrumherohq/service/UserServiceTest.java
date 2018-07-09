@@ -48,11 +48,11 @@ public class UserServiceTest {
         String password = "123Change";
 
         User user = new User(1L, "John", email, password);
-        Mockito.when(userRepository.findByUsernameAndPassword(email, password)).thenReturn(user);
+        Mockito.when(userRepository.findByEmailAndPassword(email, password)).thenReturn(user);
 
         User result = userService.findForLogin(email, password);
 
-        Mockito.verify(userRepository, Mockito.only()).findByUsernameAndPassword(email, password);
+        Mockito.verify(userRepository, Mockito.only()).findByEmailAndPassword(email, password);
         Assert.assertNotNull(result);
         Assert.assertEquals(user.getId(), result.getId());
         Assert.assertEquals(user.getName(), result.getName());
