@@ -8,8 +8,10 @@ import com.scrumhero.scrumherohq.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,6 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
+
+import java.util.Collections;
 
 @Service("userService")
 public class UserServiceImpl implements UserService {
@@ -79,5 +83,6 @@ public class UserServiceImpl implements UserService {
         if(duplicatedUser != null) {
             throw new InvalidUserException("Invalid user, an user with this email already exists.");
         }
+
     }
 }

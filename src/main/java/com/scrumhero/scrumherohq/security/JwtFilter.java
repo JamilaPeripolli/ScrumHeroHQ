@@ -58,10 +58,10 @@ public class JwtFilter extends BasicAuthenticationFilter {
 
         if (token != null) {
             String principal = Jwts.parser()
-                                .setSigningKey(key)
-                                .parseClaimsJws(token)
-                                .getBody()
-                                .getSubject();
+                    .setSigningKey(key)
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getSubject();
 
             if (principal != null) {
                 UserDetails user = userDetailsService.loadUserByUsername(principal);
