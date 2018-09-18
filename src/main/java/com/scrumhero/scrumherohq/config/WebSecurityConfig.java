@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -21,6 +21,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private final String LOGIN_ENDPOINT = "/login";
+
+    private final String SIGN_UP_ENDPOINT = "/api/user/signup";
+
     @Autowired
     private UserDetailsService userDetailsService;
 
@@ -28,18 +32,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
             .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/login", "/api/user/signup").permitAll()
+                .antMatchers(HttpMethod.POST, LOGIN_ENDPOINT, SIGN_UP_ENDPOINT).permitAll()
                 .anyRequest().authenticated()
             .and()
-            .addFilter(new LoginFilter(authenticationManager()))
-            .addFilter(new JwtFilter(authenticationManager()))
+            .addFilter(loginFilter())
+            .addFilter(jwtFilter())
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
-
-//    @Override
-//    public void configure(WebSecurity web) {
-//        web.ignoring().antMatchers(HttpMethod.POST, );
-//    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -49,6 +48,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager() throws Exception {
+        return super.authenticationManager();
+    }
+
+    @Bean
+    public JwtFilter jwtFilter() throws Exception {
+        return new JwtFilter(authenticationManager(), userDetailsService);
+    }
+
+    @Bean
+    public LoginFilter loginFilter() throws Exception {
+        return new LoginFilter();
     }
 
 }

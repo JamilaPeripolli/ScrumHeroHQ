@@ -1,14 +1,13 @@
 package com.scrumhero.scrumherohq.controller;
 
+import com.scrumhero.scrumherohq.exception.InvalidUserException;
 import com.scrumhero.scrumherohq.model.User;
 import com.scrumhero.scrumherohq.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,33 +25,27 @@ public class UserController {
 
     @PostMapping("/signup")
     public ResponseEntity add(@RequestBody User user) {
+
+        LOGGER.debug("/signup request, user: {}", user.getEmail());
+
         try {
             service.save(user);
 
-            LOGGER.info("User created: {}", user.getEmail());
+            LOGGER.info("/signup response, status: {}", HttpStatus.CREATED);
 
             return ResponseEntity.status(HttpStatus.CREATED).build();
-        } catch (Exception e) {
+
+        } catch (InvalidUserException e) {
+
             LOGGER.warn("Error to create user: {}", user.getEmail());
 
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
-    public ResponseEntity delete() {
-        return null;
+    @GetMapping
+    public ResponseEntity hello() {
+        return ResponseEntity.status(HttpStatus.OK).body("Hello Heros!");
     }
 
-    @RequestMapping("/hello")
-    @GetMapping
-    public String hello() {
-        return "hello world";
-    }
-
-    @RequestMapping("/home")
-    @GetMapping
-    @PreAuthorize("permitAll()")
-    public String home() {
-        return "welcome";
-    }
 }

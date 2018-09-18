@@ -4,11 +4,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.scrumhero.scrumherohq.model.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -17,30 +21,31 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
 
+import static com.scrumhero.scrumherohq.util.Constants.HEADER_NAME;
+import static com.scrumhero.scrumherohq.util.Constants.TOKEN_PREFIX;
+
+@Component
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
+    @Value("${app.security.token.expirationTime:3600000}")
+    private long expirationTime;
+
+    @Value("${app.security.token.key}")
+    private String key;
+
     private AuthenticationManager authenticationManager;
-
-    private final long EXPIRATION_TIME = 3600000;
-
-    private final String SECRET = "U2NydW1IZXJvSFE="; // Base64 ScrumHeroHQ
-    private final String HEADER_NAME = "Authorization";
-    private final String TOKEN_PREFIX = "Bearer ";
-
-    public LoginFilter(AuthenticationManager authenticationManager) {
-        this.authenticationManager = authenticationManager;
-    }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
         try {
+
             User user = new ObjectMapper().readValue(request.getInputStream(), User.class);
 
             return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
+
         } catch (IOException e) {
-            throw new RuntimeException(e);
-            // TODO: tratar exceção
+            throw new BadCredentialsException("Could not authenticate the user, please try again.", e);
         }
 
     }
@@ -50,9 +55,16 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
 
         String token = Jwts.builder()
                             .setSubject(((org.springframework.security.core.userdetails.User) authResult.getPrincipal()).getUsername())
-                            .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                            .signWith(SignatureAlgorithm.HS512, SECRET)
+                            .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
+                            .signWith(SignatureAlgorithm.HS512, key)
                             .compact();
         response.addHeader(HEADER_NAME, TOKEN_PREFIX + token);
+    }
+
+    @Override
+    @Autowired
+    public void setAuthenticationManager(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
+        super.setAuthenticationManager(authenticationManager);
     }
 }
