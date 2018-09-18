@@ -20,8 +20,6 @@ import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
 
-import java.util.Collections;
-
 @Service("userService")
 public class UserServiceImpl implements UserService {
 
@@ -83,6 +81,5 @@ public class UserServiceImpl implements UserService {
         if(duplicatedUser != null) {
             throw new InvalidUserException("Invalid user, an user with this email already exists.");
         }
-
     }
 }

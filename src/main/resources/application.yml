@@ -13,4 +13,3 @@ app:
     token:
       expirationTime: 3600000 # in millis
       key: "U2NydW1IZXJvSFE=" # ScrumHeroHQ Base64
-
