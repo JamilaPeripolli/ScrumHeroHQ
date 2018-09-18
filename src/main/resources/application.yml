@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/scrumhero
+    username: root
+    password: 1234
+
+jpa:
+  hibernate:
+      ddl-auto: create
+
+app:
+  security:
+    token:
+      expirationTime: 3600000 # in millis
+      key: "U2NydW1IZXJvSFE=" # ScrumHeroHQ Base64

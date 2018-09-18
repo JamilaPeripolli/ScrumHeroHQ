@@ -1,8 +1,8 @@
 package com.scrumhero.scrumherohq.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import com.scrumhero.scrumherohq.model.type.AuthorityType;
+
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
@@ -20,18 +20,26 @@ public class User implements Serializable {
 
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    private AuthorityType authority;
+
     public User() {
     }
 
-    public User(Long id, String name, String email, String password) {
+    public User(Long id, String name, String email, String password, AuthorityType authority) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
+        this.authority = authority;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -56,5 +64,13 @@ public class User implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public AuthorityType getAuthority() {
+        return authority;
+    }
+
+    public void setAuthority(AuthorityType authority) {
+        this.authority = authority;
     }
 }
