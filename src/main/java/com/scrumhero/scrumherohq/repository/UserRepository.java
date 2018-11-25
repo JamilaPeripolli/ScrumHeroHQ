@@ -1,6 +1,6 @@
 package com.scrumhero.scrumherohq.repository;
 
-import com.scrumhero.scrumherohq.model.User;
+import com.scrumhero.scrumherohq.model.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
