@@ -53,10 +53,10 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
 
         String token = Jwts.builder()
-                            .setSubject(((org.springframework.security.core.userdetails.User) authResult.getPrincipal()).getUsername())
-                            .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
-                            .signWith(SignatureAlgorithm.HS512, key)
-                            .compact();
+                .setSubject(((org.springframework.security.core.userdetails.User) authResult.getPrincipal()).getUsername())
+                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
+                .signWith(SignatureAlgorithm.HS512, key)
+                .compact();
         response.addHeader(SECURITY_TOKEN_HEADER, SECURITY_TOKEN_PREFIX + token);
     }
 
