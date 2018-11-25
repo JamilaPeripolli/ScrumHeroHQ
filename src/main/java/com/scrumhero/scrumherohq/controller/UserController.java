@@ -1,6 +1,6 @@
 package com.scrumhero.scrumherohq.controller;
 
-import com.scrumhero.scrumherohq.model.User;
+import com.scrumhero.scrumherohq.model.dto.UserDto;
 import com.scrumhero.scrumherohq.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-
 
 @RestController
 @RequestMapping("/api/user")
@@ -31,7 +30,7 @@ public class UserController {
 
     @PostMapping("/signup")
     @PreAuthorize("permitAll()")
-    public ResponseEntity add(@RequestBody @Valid User user) throws Exception {
+    public ResponseEntity add(@RequestBody @Valid UserDto user) throws Exception {
 
         LOGGER.debug("/signup request, user: {}", user.getEmail());
 

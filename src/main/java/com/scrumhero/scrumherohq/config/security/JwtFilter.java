@@ -1,4 +1,4 @@
-package com.scrumhero.scrumherohq.security;
+package com.scrumhero.scrumherohq.config.security;
 
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.scrumhero.scrumherohq.util.Constants.HEADER_NAME;
-import static com.scrumhero.scrumherohq.util.Constants.TOKEN_PREFIX;
+import static com.scrumhero.scrumherohq.util.Constants.SECURITY_TOKEN_HEADER;
+import static com.scrumhero.scrumherohq.util.Constants.SECURITY_TOKEN_PREFIX;
 
 @Component
 public class JwtFilter extends BasicAuthenticationFilter {
@@ -37,9 +37,9 @@ public class JwtFilter extends BasicAuthenticationFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
 
-        String header = request.getHeader(HEADER_NAME);
+        String header = request.getHeader(SECURITY_TOKEN_HEADER);
 
-        if (header == null || !header.startsWith(TOKEN_PREFIX)) {
+        if (header == null || !header.startsWith(SECURITY_TOKEN_PREFIX)) {
             chain.doFilter(request, response);
             return;
         }
@@ -51,7 +51,7 @@ public class JwtFilter extends BasicAuthenticationFilter {
     }
 
     private String getToken(String header) {
-        return header.replace(TOKEN_PREFIX, "").trim();
+        return header.replace(SECURITY_TOKEN_PREFIX, "").trim();
     }
 
     private UsernamePasswordAuthenticationToken getAuthentication(String token) {

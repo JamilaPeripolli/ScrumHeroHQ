@@ -1,7 +1,5 @@
-package com.scrumhero.scrumherohq.config;
+package com.scrumhero.scrumherohq.config.security;
 
-import com.scrumhero.scrumherohq.security.JwtFilter;
-import com.scrumhero.scrumherohq.security.LoginFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +19,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 
-import static com.scrumhero.scrumherohq.util.Constants.HEADER_NAME;
+import static com.scrumhero.scrumherohq.util.Constants.SECURITY_TOKEN_HEADER;
 
 @Configuration
 @EnableWebSecurity
@@ -44,7 +42,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilter(loginFilter())
                 .addFilter(jwtFilter())
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
     }
 
     @Override
@@ -78,7 +75,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         final CorsConfiguration corsConfig = new CorsConfiguration();
         corsConfig.setAllowedOrigins(Arrays.asList("*"));
         corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
-        corsConfig.setAllowedHeaders(Arrays.asList(HEADER_NAME, "Cache-Control", "Content-Type"));
+        corsConfig.setAllowedHeaders(Arrays.asList(SECURITY_TOKEN_HEADER, "Cache-Control", "Content-Type"));
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfig);
         return source;

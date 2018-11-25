@@ -1,46 +1,27 @@
-package com.scrumhero.scrumherohq.model;
+package com.scrumhero.scrumherohq.model.dto;
 
 import com.scrumhero.scrumherohq.model.type.AuthorityType;
 
-import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 
-@Entity
-public class User implements Serializable {
+public class UserDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue
-    private Long id;
-
+    @NotNull
     private String name;
 
+    @NotNull
+    @Pattern(regexp = "[A-Za-z0-9_.-]+@[A-Za-z0-9_]+(\\.[A-Za-z0-9_]+)+")
     private String email;
 
+    @NotNull
     private String password;
 
-    @Enumerated(EnumType.STRING)
+    @NotNull
     private AuthorityType authority;
-
-    public User() {
-    }
-
-    public User(Long id, String name, String email, String password, AuthorityType authority) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.password = password;
-        this.authority = authority;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -73,4 +54,6 @@ public class User implements Serializable {
     public void setAuthority(AuthorityType authority) {
         this.authority = authority;
     }
+
+
 }

@@ -1,7 +1,7 @@
-package com.scrumhero.scrumherohq.security;
+package com.scrumhero.scrumherohq.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.scrumhero.scrumherohq.model.User;
+import com.scrumhero.scrumherohq.model.entity.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +20,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
 
-import static com.scrumhero.scrumherohq.util.Constants.HEADER_NAME;
-import static com.scrumhero.scrumherohq.util.Constants.TOKEN_PREFIX;
+import static com.scrumhero.scrumherohq.util.Constants.SECURITY_TOKEN_HEADER;
+import static com.scrumhero.scrumherohq.util.Constants.SECURITY_TOKEN_PREFIX;
 
 @Component
 public class LoginFilter extends UsernamePasswordAuthenticationFilter {
@@ -53,11 +53,11 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
 
         String token = Jwts.builder()
-                .setSubject(((org.springframework.security.core.userdetails.User) authResult.getPrincipal()).getUsername())
-                .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
-                .signWith(SignatureAlgorithm.HS512, key)
-                .compact();
-        response.addHeader(HEADER_NAME, TOKEN_PREFIX + token);
+                            .setSubject(((org.springframework.security.core.userdetails.User) authResult.getPrincipal()).getUsername())
+                            .setExpiration(new Date(System.currentTimeMillis() + expirationTime))
+                            .signWith(SignatureAlgorithm.HS512, key)
+                            .compact();
+        response.addHeader(SECURITY_TOKEN_HEADER, SECURITY_TOKEN_PREFIX + token);
     }
 
     @Override
