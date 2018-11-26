@@ -1,28 +1,29 @@
-package com.scrumhero.scrumherohq.model.entity;
+package com.scrumhero.scrumherohq.model.dto;
 
 import com.scrumhero.scrumherohq.model.type.MissionStatus;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-@Entity
-public class IntergalacticMission implements Serializable {
+public class MissionDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue
     private Long id;
 
-    private String description;
+    private String name;
 
     private LocalDate startDate;
 
     private LocalDate endDate;
 
-    @Enumerated(EnumType.STRING)
     private MissionStatus status;
+
+    private Boolean success;
+
+    private String goal;
+
+    private IntergalacticMissionDto intergalacticMission;
 
     public Long getId() {
         return id;
@@ -32,12 +33,12 @@ public class IntergalacticMission implements Serializable {
         this.id = id;
     }
 
-    public String getDescription() {
-        return description;
+    public String getName() {
+        return name;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public LocalDate getStartDate() {
@@ -62,5 +63,29 @@ public class IntergalacticMission implements Serializable {
 
     public void setStatus(MissionStatus status) {
         this.status = status;
+    }
+
+    public Boolean getSuccess() {
+        return success;
+    }
+
+    public void setSuccess(Boolean success) {
+        this.success = success;
+    }
+
+    public String getGoal() {
+        return goal;
+    }
+
+    public void setGoal(String goal) {
+        this.goal = goal;
+    }
+
+    public IntergalacticMissionDto getIntergalacticMission() {
+        return intergalacticMission;
+    }
+
+    public void setIntergalacticMission(IntergalacticMissionDto intergalacticMission) {
+        this.intergalacticMission = intergalacticMission;
     }
 }

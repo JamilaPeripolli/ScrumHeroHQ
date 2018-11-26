@@ -2,9 +2,9 @@ package com.scrumhero.scrumherohq.model.type;
 
 public enum EvolutionItemStatus {
 
-    OPENED("OPENED"),
-    CONCLUDED("CONCLUDED"),
-    CLOSED("CLOSED");
+    PENDING("PENDING"),
+    DONE("DONE"),
+    CANCELED("CANCELED");
 
     private String value;
 

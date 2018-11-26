@@ -1,18 +1,14 @@
-package com.scrumhero.scrumherohq.model.entity;
+package com.scrumhero.scrumherohq.model.dto;
 
 import com.scrumhero.scrumherohq.model.type.MissionStatus;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-@Entity
-public class IntergalacticMission implements Serializable {
+public class IntergalacticMissionDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue
     private Long id;
 
     private String description;
@@ -21,7 +17,6 @@ public class IntergalacticMission implements Serializable {
 
     private LocalDate endDate;
 
-    @Enumerated(EnumType.STRING)
     private MissionStatus status;
 
     public Long getId() {
