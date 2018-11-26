@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public class User implements Serializable, UserDetails {
 
     private static final long serialVersionUID = 1L;
