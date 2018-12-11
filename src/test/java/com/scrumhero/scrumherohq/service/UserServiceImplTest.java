@@ -7,7 +7,6 @@ import com.scrumhero.scrumherohq.model.entity.User;
 import com.scrumhero.scrumherohq.model.type.AuthorityType;
 import com.scrumhero.scrumherohq.repository.UserRepository;
 import com.scrumhero.scrumherohq.service.impl.UserServiceImpl;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +20,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -46,7 +47,7 @@ public class UserServiceImplTest {
     @Test
     public void shouldSave() throws BadRequestException {
         Mockito.when(encoder.encode(Mockito.anyString())).thenReturn(Mockito.anyString());
-        Mockito.when(repository.findByEmail("player@mail.com")).thenReturn(null);
+        Mockito.when(repository.findByEmail("player@mail.com")).thenReturn(Optional.empty());
 
         service.save(createTestUserDto(AuthorityType.USER));
 
@@ -56,7 +57,7 @@ public class UserServiceImplTest {
     @Test(expected = BadRequestException.class)
     public void shouldThrowExceptionWhenUserIsDuplicated() throws BadRequestException {
         Mockito.when(encoder.encode(Mockito.anyString())).thenReturn(Mockito.anyString());
-        Mockito.when(repository.findByEmail("player@mail.com")).thenReturn(new User());
+        Mockito.when(repository.findByEmail("player@mail.com")).thenReturn(Optional.of(new User()));
 
         service.save(createTestUserDto(AuthorityType.USER));
 
@@ -64,20 +65,20 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void shouldReturnUser() throws BadRequestException {
-        User expected = createTestUser(AuthorityType.USER);
+    public void shouldReturnUser() {
+        Optional<User> expected = Optional.of(createTestUser(AuthorityType.USER));
         Mockito.when(repository.findByEmail("player@mail.com")).thenReturn(expected);
 
         UserDetails user = service.loadUserByUsername("player@mail.com");
 
-        assertThat(user).isEqualTo(expected);
+        assertThat(user).isEqualTo(expected.get());
     }
 
     @Test(expected = UsernameNotFoundException.class)
-    public void shouldThrowException() throws BadRequestException {
-        Mockito.when(repository.findByEmail("player@mail.com")).thenReturn(null);
+    public void shouldThrowException() {
+        Mockito.when(repository.findByEmail("player@mail.com")).thenReturn(Optional.empty());
 
-        UserDetails user = service.loadUserByUsername("player@mail.com");
+        service.loadUserByUsername("player@mail.com");
     }
 
     private UserDto createTestUserDto(AuthorityType authority) {

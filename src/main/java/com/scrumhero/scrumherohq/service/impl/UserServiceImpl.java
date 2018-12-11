@@ -13,6 +13,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service("userService")
 public class UserServiceImpl implements UserService {
 
@@ -43,22 +45,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public User loadUserByUsername(String email) {
 
-        User user = repository.findByEmail(email);
+        Optional<User> user = repository.findByEmail(email);
 
-        if (user == null) {
+        if (!user.isPresent()) {
             throw new UsernameNotFoundException("Email not found: " + email);
         }
 
-        LOGGER.debug("User found: {}", user.getEmail());
+        LOGGER.debug("User found: {}", user.get().getEmail());
 
-        return user;
+        return user.get();
     }
 
     private void validateNewUser(User user) throws BadRequestException {
 
-        User duplicatedUser = repository.findByEmail(user.getEmail());
+        Optional<User> duplicatedUser = repository.findByEmail(user.getEmail());
 
-        if(duplicatedUser != null) {
+        if(duplicatedUser.isPresent()) {
             throw new BadRequestException("Invalid user, an user with this email already exists.");
         }
     }
