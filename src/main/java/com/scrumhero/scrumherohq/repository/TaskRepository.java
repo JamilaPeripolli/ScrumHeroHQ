@@ -1,10 +1,10 @@
 package com.scrumhero.scrumherohq.repository;
 
-import com.scrumhero.scrumherohq.model.entity.EvolutionItem;
+import com.scrumhero.scrumherohq.model.entity.Task;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface EvolutionItemRepository extends JpaRepository<EvolutionItem, Long> {
+public interface TaskRepository extends JpaRepository<Task, Long> {
 
 }
