@@ -1,7 +1,10 @@
 package com.scrumhero.scrumherohq.model.dto;
 
+import com.scrumhero.scrumherohq.model.entity.League;
 import com.scrumhero.scrumherohq.model.type.EvolutionItemStatus;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 public class EvolutionItemDto implements Serializable {
@@ -10,11 +13,16 @@ public class EvolutionItemDto implements Serializable {
 
     private Long id;
 
+    @NotNull
+    @Size(max = 150)
     private String title;
 
     private String description;
 
     private EvolutionItemStatus status;
+
+    @NotNull
+    private League league;
 
     public Long getId() {
         return id;
@@ -46,5 +54,13 @@ public class EvolutionItemDto implements Serializable {
 
     public void setStatus(EvolutionItemStatus status) {
         this.status = status;
+    }
+
+    public League getLeague() {
+        return league;
+    }
+
+    public void setLeague(League league) {
+        this.league = league;
     }
 }

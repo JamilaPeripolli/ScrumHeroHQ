@@ -1,5 +1,7 @@
 package com.scrumhero.scrumherohq.model.dto;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 public class SuperPowerDto implements Serializable {
@@ -8,6 +10,8 @@ public class SuperPowerDto implements Serializable {
 
     private Long id;
 
+    @NotNull
+    @Size(max = 150)
     private String name;
 
     private String description;

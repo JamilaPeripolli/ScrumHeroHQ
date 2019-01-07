@@ -1,14 +1,17 @@
 package com.scrumhero.scrumherohq.model.dto;
 
-import com.scrumhero.scrumherohq.model.entity.User;
+import com.scrumhero.scrumherohq.model.entity.League;
 import com.scrumhero.scrumherohq.model.type.PlayerCategory;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
-public class PlayerDto extends User implements Serializable {
+public class PlayerDto extends UserDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @Size(max = 100)
     private String nickname;
 
     private byte[] avatar;
@@ -19,7 +22,10 @@ public class PlayerDto extends User implements Serializable {
 
     private Integer level;
 
+    @NotNull
     private PlayerCategory category;
+
+    private League league;
 
     public String getNickname() {
         return nickname;
@@ -67,5 +73,13 @@ public class PlayerDto extends User implements Serializable {
 
     public void setCategory(PlayerCategory category) {
         this.category = category;
+    }
+
+    public League getLeague() {
+        return league;
+    }
+
+    public void setLeague(League league) {
+        this.league = league;
     }
 }

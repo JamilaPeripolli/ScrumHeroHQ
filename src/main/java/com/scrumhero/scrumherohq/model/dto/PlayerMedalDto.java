@@ -6,11 +6,21 @@ public class PlayerMedalDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    private Long id;
+
     private PlayerDto player;
 
     private MedalDto medal;
 
     private IntergalacticMissionDto intergalacticMission;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public PlayerDto getPlayer() {
         return player;

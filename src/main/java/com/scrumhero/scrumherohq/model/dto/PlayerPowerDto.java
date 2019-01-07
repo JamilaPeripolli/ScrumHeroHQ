@@ -6,6 +6,8 @@ public class PlayerPowerDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    private Long id;
+
     private PlayerDto player;
 
     private SuperPowerDto superPower;
@@ -13,6 +15,14 @@ public class PlayerPowerDto implements Serializable {
     private Long score;
 
     private Integer level;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public PlayerDto getPlayer() {
         return player;

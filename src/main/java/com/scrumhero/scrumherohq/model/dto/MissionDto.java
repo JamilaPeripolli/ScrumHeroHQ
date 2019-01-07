@@ -2,6 +2,8 @@ package com.scrumhero.scrumherohq.model.dto;
 
 import com.scrumhero.scrumherohq.model.type.MissionStatus;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -11,6 +13,8 @@ public class MissionDto implements Serializable {
 
     private Long id;
 
+    @NotNull
+    @Size(max = 150)
     private String name;
 
     private LocalDate startDate;
