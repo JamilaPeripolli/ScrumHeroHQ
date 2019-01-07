@@ -15,12 +15,14 @@ public class Mission implements Serializable {
     @GeneratedValue
     private Long id;
 
+    @Column(nullable = false, length = 150)
     private String name;
 
     private LocalDate startDate;
 
     private LocalDate endDate;
 
+    @Column(nullable = false, length = 50)
     @Enumerated(EnumType.STRING)
     private MissionStatus status;
 

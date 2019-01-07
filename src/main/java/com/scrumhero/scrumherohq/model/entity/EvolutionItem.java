@@ -2,7 +2,7 @@ package com.scrumhero.scrumherohq.model.entity;
 
 import com.scrumhero.scrumherohq.model.type.EvolutionItemStatus;
 
-import javax.persistence.Entity;
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
@@ -10,13 +10,22 @@ public class EvolutionItem implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @Id
+    @GeneratedValue
     private Long id;
 
+    @Column(nullable = false, length = 150)
     private String title;
 
     private String description;
 
+    @Column(nullable = false, length = 50)
+    @Enumerated(EnumType.STRING)
     private EvolutionItemStatus status;
+
+    @ManyToOne
+    @JoinColumn(name = "league_id", nullable = false)
+    private League league;
 
     public Long getId() {
         return id;
@@ -48,5 +57,13 @@ public class EvolutionItem implements Serializable {
 
     public void setStatus(EvolutionItemStatus status) {
         this.status = status;
+    }
+
+    public League getLeague() {
+        return league;
+    }
+
+    public void setLeague(League league) {
+        this.league = league;
     }
 }

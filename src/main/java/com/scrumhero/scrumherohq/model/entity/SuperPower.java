@@ -1,5 +1,6 @@
 package com.scrumhero.scrumherohq.model.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -14,6 +15,7 @@ public class SuperPower implements Serializable {
     @GeneratedValue
     private Long id;
 
+    @Column(nullable = false, length = 150)
     private String name;
 
     private String description;

@@ -23,9 +23,14 @@ public class Event implements Serializable {
     private String notes;
 
     @Enumerated(EnumType.STRING)
+    @Column(length = 50)
     private EventType type;
 
-    @OneToMany
+    @ManyToMany
+    @JoinTable(name = "event_attendees",
+            joinColumns = { @JoinColumn(name = "event_id") },
+            inverseJoinColumns = { @JoinColumn(name = "user_id") }
+    )
     private List<Player> attendees;
 
     public Long getId() {

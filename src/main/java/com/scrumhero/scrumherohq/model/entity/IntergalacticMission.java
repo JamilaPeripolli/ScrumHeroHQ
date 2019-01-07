@@ -15,14 +15,22 @@ public class IntergalacticMission implements Serializable {
     @GeneratedValue
     private Long id;
 
+    @Column(length = 150, nullable = false)
+    private String name;
+
     private String description;
 
     private LocalDate startDate;
 
     private LocalDate endDate;
 
+    @Column(length = 50, nullable = false)
     @Enumerated(EnumType.STRING)
     private MissionStatus status;
+
+    @ManyToOne
+    @JoinColumn(name = "league_id")
+    private League league;
 
     public Long getId() {
         return id;
@@ -38,6 +46,14 @@ public class IntergalacticMission implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public LocalDate getStartDate() {
@@ -62,5 +78,13 @@ public class IntergalacticMission implements Serializable {
 
     public void setStatus(MissionStatus status) {
         this.status = status;
+    }
+
+    public League getLeague() {
+        return league;
+    }
+
+    public void setLeague(League league) {
+        this.league = league;
     }
 }

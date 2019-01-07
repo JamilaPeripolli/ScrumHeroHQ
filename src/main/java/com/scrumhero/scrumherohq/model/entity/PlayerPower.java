@@ -1,6 +1,6 @@
 package com.scrumhero.scrumherohq.model.entity;
 
-import javax.persistence.Entity;
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
@@ -8,12 +8,22 @@ public class PlayerPower implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "player_id", nullable = false)
     private Player player;
 
+    @ManyToOne
+    @JoinColumn(name = "super_power_id", nullable = false)
     private SuperPower superPower;
 
+    @Column(nullable = false)
     private Long score;
 
+    @Column(nullable = false)
     private Integer level;
 
     public Player getPlayer() {
