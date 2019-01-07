@@ -9,23 +9,29 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public class User implements Serializable, UserDetails {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, length = 150)
     private String name;
 
+    @Column(nullable = false, length = 100)
     private String email;
 
+    @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false, length = 50)
     @Enumerated(EnumType.STRING)
     private AuthorityType authority;
 
@@ -110,5 +116,23 @@ public class User implements Serializable, UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) &&
+                Objects.equals(name, user.name) &&
+                Objects.equals(email, user.email) &&
+                Objects.equals(password, user.password) &&
+                authority == user.authority;
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, name, email, password, authority);
     }
 }
