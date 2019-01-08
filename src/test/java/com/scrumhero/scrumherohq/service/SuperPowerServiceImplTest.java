@@ -4,12 +4,9 @@ import com.scrumhero.scrumherohq.config.ModelMapperConfig;
 import com.scrumhero.scrumherohq.exception.BadRequestException;
 import com.scrumhero.scrumherohq.exception.ResourceNotFoundException;
 import com.scrumhero.scrumherohq.model.dto.SuperPowerDto;
-import com.scrumhero.scrumherohq.model.entity.SuperPower;
-import com.scrumhero.scrumherohq.model.type.AuthorityType;
 import com.scrumhero.scrumherohq.repository.SuperPowerRepository;
 import com.scrumhero.scrumherohq.service.impl.SuperPowerServiceImpl;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -25,6 +22,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static com.scrumhero.scrumherohq.fixture.SuperPowerFixture.create;
+import static com.scrumhero.scrumherohq.fixture.SuperPowerFixture.createDto;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
@@ -44,46 +43,60 @@ public class SuperPowerServiceImplTest {
     }
 
     @Test
-    public void shouldSave() throws BadRequestException {
+    public void saveShouldReturnSuperPower() throws BadRequestException {
         Mockito.when(repository.findByName("Java")).thenReturn(Optional.empty());
-        Mockito.when(repository.saveAndFlush(Mockito.any())).thenReturn(createTestSuperPower());
+        Mockito.when(repository.saveAndFlush(Mockito.any())).thenReturn(create());
 
-        SuperPowerDto result = service.save(createTestSuperPowerDto());
+        SuperPowerDto superPower = createDto();
+        superPower.setId(null);
+        SuperPowerDto result = service.save(superPower);
 
-        assertThat(result).isEqualTo(createTestSuperPowerDto());
+        assertThat(result).isEqualTo(createDto());
     }
 
     @Test(expected = BadRequestException.class)
-    public void shouldThrowExceptionWhenSuperPowerIsDuplicated() throws BadRequestException {
-        Mockito.when(repository.findByName("Java")).thenReturn(Optional.of(createTestSuperPower()));
+    public void saveShouldThrowExceptionWhenSuperPowerIsDuplicated() throws BadRequestException {
+        Mockito.when(repository.findByName("Java")).thenReturn(Optional.of(create()));
 
-        service.save(createTestSuperPowerDto());
+        SuperPowerDto superPower = createDto();
+        superPower.setId(null);
+
+        service.save(superPower);
     }
 
     @Test
-    public void shouldUpdate() throws ResourceNotFoundException {
-        Mockito.when(repository.findById(1L)).thenReturn(Optional.of(createTestSuperPower()));
-        Mockito.when(repository.saveAndFlush(Mockito.any())).thenReturn(createTestSuperPower());
+    public void updateShouldReturnSuperPower() throws ResourceNotFoundException, BadRequestException {
+        Mockito.when(repository.findById(1L)).thenReturn(Optional.of(create()));
+        Mockito.when(repository.saveAndFlush(Mockito.any())).thenReturn(create());
 
-        SuperPowerDto result = service.update(createTestSuperPowerDto());
+        SuperPowerDto result = service.update(createDto());
 
-        assertThat(result).isEqualTo(createTestSuperPowerDto());
+        assertThat(result).isEqualTo(createDto());
     }
 
     @Test(expected = ResourceNotFoundException.class)
-    public void shouldThrowExceptionWhenSuperPowerIsNotFoundDuringUpdate() throws ResourceNotFoundException {
+    public void updateShouldThrowExceptionWhenSuperPowerIsNotFound() throws ResourceNotFoundException, BadRequestException {
         Mockito.when(repository.findById(1L)).thenReturn(Optional.empty());
 
-        service.update(createTestSuperPowerDto());
+        service.update(createDto());
+    }
+
+    @Test(expected = BadRequestException.class)
+    public void updateShouldThrowExceptionWhenSuperPowerIsDuplicated() throws ResourceNotFoundException, BadRequestException {
+        Mockito.when(repository.findById(1L)).thenReturn(Optional.of(create()));
+        Mockito.when(repository.findByNameWhereIdIsNotEquals("Java", 1L))
+                .thenReturn(Optional.of(create()));
+
+        service.update(createDto());
     }
 
     @Test
     public void shouldReturnListOfSuperPower() {
-        Mockito.when(repository.findAll()).thenReturn(Arrays.asList(createTestSuperPower()));
+        Mockito.when(repository.findAll()).thenReturn(Arrays.asList(create()));
 
         List<SuperPowerDto> result = service.getAll();
 
-        assertThat(result).containsExactly(createTestSuperPowerDto());
+        assertThat(result).containsExactly(createDto());
     }
 
     @Test
@@ -97,11 +110,11 @@ public class SuperPowerServiceImplTest {
 
     @Test
     public void shouldReturnSuperPower() throws ResourceNotFoundException {
-        Mockito.when(repository.findById(1L)).thenReturn(Optional.of(createTestSuperPower()));
+        Mockito.when(repository.findById(1L)).thenReturn(Optional.of(create()));
 
         SuperPowerDto result = service.getById(1L);
 
-        assertThat(result).isEqualTo(createTestSuperPowerDto());
+        assertThat(result).isEqualTo(createDto());
     }
 
     @Test(expected = ResourceNotFoundException.class)
@@ -113,7 +126,7 @@ public class SuperPowerServiceImplTest {
 
     @Test
     public void shouldDeleteSuperPower() throws ResourceNotFoundException {
-        Mockito.when(repository.findById(1L)).thenReturn(Optional.of(createTestSuperPower()));
+        Mockito.when(repository.findById(1L)).thenReturn(Optional.of(create()));
 
         service.delete(1L);
 
@@ -127,21 +140,4 @@ public class SuperPowerServiceImplTest {
         service.delete(1L);
     }
 
-    private SuperPowerDto createTestSuperPowerDto() {
-        SuperPowerDto superPower = new SuperPowerDto();
-        superPower.setId(1L);
-        superPower.setName("Java");
-        superPower.setDescription("The ability to write functional code in Java");
-
-        return superPower;
-    }
-
-    private SuperPower createTestSuperPower() {
-        SuperPower superPower = new SuperPower();
-        superPower.setId(1L);
-        superPower.setName("Java");
-        superPower.setDescription("The ability to write functional code in Java");
-
-        return superPower;
-    }
 }

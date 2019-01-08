@@ -10,7 +10,7 @@ public interface SuperPowerService {
 
     SuperPowerDto save(SuperPowerDto superPower) throws BadRequestException;
 
-    SuperPowerDto update(SuperPowerDto superPower) throws ResourceNotFoundException;
+    SuperPowerDto update(SuperPowerDto superPower) throws ResourceNotFoundException, BadRequestException;
 
     List<SuperPowerDto> getAll();
 

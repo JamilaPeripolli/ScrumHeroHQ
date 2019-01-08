@@ -56,7 +56,7 @@ public abstract class AbstractControllerTest {
         switch (method) {
             case GET: return doGet(path);
             case POST: return doPost(path, requestBody);
-            case PUT: return doPut(path);
+            case PUT: return doPut(path, requestBody);
             case DELETE: return doDelete(path);
         }
 
@@ -78,9 +78,10 @@ public abstract class AbstractControllerTest {
         return this.mvc.perform(requestBuilder).andReturn().getResponse();
     }
 
-    private MockHttpServletResponse doPut(String path) throws Exception {
+    private MockHttpServletResponse doPut(String path, String requestBody) throws Exception {
         MockHttpServletRequestBuilder requestBuilder = put(path)
-                .contentType(MediaType.APPLICATION_JSON);
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestBody);
 
         return this.mvc.perform(requestBuilder).andReturn().getResponse();
     }

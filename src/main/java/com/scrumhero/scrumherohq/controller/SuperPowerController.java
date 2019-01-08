@@ -37,7 +37,7 @@ public class SuperPowerController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity update(@PathVariable Long id, @RequestBody @Valid SuperPowerDto superPower) throws ResourceNotFoundException {
+    public ResponseEntity update(@PathVariable Long id, @RequestBody @Valid SuperPowerDto superPower) throws ResourceNotFoundException, BadRequestException {
         LOGGER.debug("Endpoint called: PUT '/api/super-powers/{}'", id);
 
         superPower.setId(id);

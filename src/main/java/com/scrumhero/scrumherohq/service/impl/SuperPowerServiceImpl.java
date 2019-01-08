@@ -46,8 +46,9 @@ public class SuperPowerServiceImpl implements SuperPowerService {
     }
 
     @Override
-    public SuperPowerDto update(SuperPowerDto superPower) throws ResourceNotFoundException {
+    public SuperPowerDto update(SuperPowerDto superPower) throws ResourceNotFoundException, BadRequestException {
         checkIfExists(superPower.getId());
+        checkDuplicatedResource(superPower);
 
         SuperPower persistedSuperPower = repository
                 .saveAndFlush(modelMapper.map(superPower, SuperPower.class));
@@ -88,7 +89,13 @@ public class SuperPowerServiceImpl implements SuperPowerService {
     }
 
     private void checkDuplicatedResource(SuperPowerDto superPower) throws BadRequestException {
-        Optional<SuperPower> duplicatedResource = repository.findByName(superPower.getName());
+        Optional<SuperPower> duplicatedResource;
+
+        if (superPower.getId() == null) {
+            duplicatedResource = repository.findByName(superPower.getName());
+        } else {
+            duplicatedResource = repository.findByNameWhereIdIsNotEquals(superPower.getName(), superPower.getId());
+        }
 
         if(duplicatedResource.isPresent()) {
             throw new BadRequestException("Invalid superpower, a superpower with this name already exists.");

@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Objects;
@@ -88,9 +89,10 @@ public class User implements Serializable, UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.asList(getAuthority().getValue())
-                .stream().map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+        return getAuthority() == null ? new ArrayList<>() :
+                Arrays.asList(getAuthority().getValue())
+                        .stream().map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList());
     }
 
     @Override
