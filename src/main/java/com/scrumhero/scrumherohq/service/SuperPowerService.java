@@ -1,5 +1,6 @@
 package com.scrumhero.scrumherohq.service;
 
+import com.scrumhero.scrumherohq.exception.BadRequestException;
 import com.scrumhero.scrumherohq.exception.ResourceNotFoundException;
 import com.scrumhero.scrumherohq.model.dto.SuperPowerDto;
 
@@ -7,7 +8,7 @@ import java.util.List;
 
 public interface SuperPowerService {
 
-    SuperPowerDto save(SuperPowerDto superPower);
+    SuperPowerDto save(SuperPowerDto superPower) throws BadRequestException;
 
     SuperPowerDto update(SuperPowerDto superPower) throws ResourceNotFoundException;
 

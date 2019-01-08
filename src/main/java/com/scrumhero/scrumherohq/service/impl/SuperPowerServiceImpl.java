@@ -1,8 +1,10 @@
 package com.scrumhero.scrumherohq.service.impl;
 
+import com.scrumhero.scrumherohq.exception.BadRequestException;
 import com.scrumhero.scrumherohq.exception.ResourceNotFoundException;
 import com.scrumhero.scrumherohq.model.dto.SuperPowerDto;
 import com.scrumhero.scrumherohq.model.entity.SuperPower;
+import com.scrumhero.scrumherohq.model.entity.User;
 import com.scrumhero.scrumherohq.repository.SuperPowerRepository;
 import com.scrumhero.scrumherohq.service.SuperPowerService;
 import org.modelmapper.ModelMapper;
@@ -32,7 +34,9 @@ public class SuperPowerServiceImpl implements SuperPowerService {
     }
 
     @Override
-    public SuperPowerDto save(SuperPowerDto superPower) {
+    public SuperPowerDto save(SuperPowerDto superPower) throws BadRequestException {
+        checkDuplicatedResource(superPower);
+
         SuperPower persistedSuperPower = repository
                 .saveAndFlush(modelMapper.map(superPower, SuperPower.class));
 
@@ -81,5 +85,13 @@ public class SuperPowerServiceImpl implements SuperPowerService {
 
     private void checkIfExists(Long id) throws ResourceNotFoundException {
         getById(id);
+    }
+
+    private void checkDuplicatedResource(SuperPowerDto superPower) throws BadRequestException {
+        Optional<SuperPower> duplicatedResource = repository.findByName(superPower.getName());
+
+        if(duplicatedResource.isPresent()) {
+            throw new BadRequestException("Invalid superpower, a superpower with this name already exists.");
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.scrumhero.scrumherohq.controller;
 
+import com.scrumhero.scrumherohq.exception.BadRequestException;
 import com.scrumhero.scrumherohq.exception.ResourceNotFoundException;
 import com.scrumhero.scrumherohq.model.dto.SuperPowerDto;
 import com.scrumhero.scrumherohq.service.SuperPowerService;
@@ -28,7 +29,7 @@ public class SuperPowerController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity create(@RequestBody @Valid SuperPowerDto superPower) {
+    public ResponseEntity create(@RequestBody @Valid SuperPowerDto superPower) throws BadRequestException {
         LOGGER.debug("Endpoint called: POST '/api/super-powers'");
 
         return ResponseEntity.status(HttpStatus.CREATED).body(service.save(superPower));
