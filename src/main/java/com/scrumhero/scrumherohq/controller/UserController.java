@@ -30,7 +30,7 @@ public class UserController {
 
     @PostMapping("/signup")
     @PreAuthorize("permitAll()")
-    public ResponseEntity add(@RequestBody @Valid UserDto user) throws Exception {
+    public ResponseEntity signup(@RequestBody @Valid UserDto user) throws Exception {
 
         LOGGER.debug("/signup request, user: {}", user.getEmail());
 
