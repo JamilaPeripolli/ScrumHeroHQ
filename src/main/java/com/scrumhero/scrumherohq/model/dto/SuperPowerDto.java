@@ -1,8 +1,10 @@
 package com.scrumhero.scrumherohq.model.dto;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Objects;
 
 public class SuperPowerDto implements Serializable {
 
@@ -10,7 +12,7 @@ public class SuperPowerDto implements Serializable {
 
     private Long id;
 
-    @NotNull
+    @NotBlank
     @Size(max = 150)
     private String name;
 
@@ -38,5 +40,21 @@ public class SuperPowerDto implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SuperPowerDto that = (SuperPowerDto) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(description, that.description);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, name, description);
     }
 }
