@@ -4,7 +4,6 @@ import com.scrumhero.scrumherohq.model.entity.League;
 import com.scrumhero.scrumherohq.model.type.MissionStatus;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -29,6 +28,13 @@ public class IntergalacticMissionDto implements Serializable {
     private MissionStatus status;
 
     private League league;
+
+    public IntergalacticMissionDto() {
+    }
+
+    public IntergalacticMissionDto(Long id) {
+        this.id = id;
+    }
 
     public Long getId() {
         return id;
