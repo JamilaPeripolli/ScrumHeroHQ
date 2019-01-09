@@ -7,9 +7,11 @@ import com.scrumhero.scrumherohq.model.entity.SuperPower;
 import com.scrumhero.scrumherohq.model.type.TaskStatus;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Objects;
 
 public class TaskDto implements Serializable {
 
@@ -17,7 +19,7 @@ public class TaskDto implements Serializable {
 
     private Long id;
 
-    @NotNull
+    @NotBlank
     @Size(max = 150)
     private String title;
 
@@ -137,5 +139,30 @@ public class TaskDto implements Serializable {
 
     public void setSuperPower(SuperPower superPower) {
         this.superPower = superPower;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TaskDto taskDto = (TaskDto) o;
+        return Objects.equals(id, taskDto.id) &&
+                Objects.equals(title, taskDto.title) &&
+                Objects.equals(description, taskDto.description) &&
+                Objects.equals(notes, taskDto.notes) &&
+                Objects.equals(acceptanceCriteria, taskDto.acceptanceCriteria) &&
+                Objects.equals(priority, taskDto.priority) &&
+                Objects.equals(estimate, taskDto.estimate) &&
+                status == taskDto.status &&
+                Objects.equals(intergalacticMission, taskDto.intergalacticMission) &&
+                Objects.equals(mission, taskDto.mission) &&
+                Objects.equals(player, taskDto.player) &&
+                Objects.equals(superPower, taskDto.superPower);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, title, description, notes, acceptanceCriteria, priority, estimate, status, intergalacticMission, mission, player, superPower);
     }
 }

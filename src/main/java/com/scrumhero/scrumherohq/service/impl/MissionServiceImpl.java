@@ -40,8 +40,8 @@ public class MissionServiceImpl implements MissionService {
 
     @Override
     public MissionDto save(MissionDto mission) throws BadRequestException, ResourceNotFoundException {
-        checkDuplicatedResource(mission);
         validateIntergalacticMission(mission);
+        checkDuplicatedResource(mission);
 
         mission.setStartDate(null);
         mission.setEndDate(null);
