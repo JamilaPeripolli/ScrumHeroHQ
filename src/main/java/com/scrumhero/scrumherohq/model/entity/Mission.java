@@ -5,6 +5,7 @@ import com.scrumhero.scrumherohq.model.type.MissionStatus;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity
 public class Mission implements Serializable {
@@ -96,5 +97,26 @@ public class Mission implements Serializable {
 
     public void setIntergalacticMission(IntergalacticMission intergalacticMission) {
         this.intergalacticMission = intergalacticMission;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Mission mission = (Mission) o;
+        return Objects.equals(id, mission.id) &&
+                Objects.equals(name, mission.name) &&
+                Objects.equals(startDate, mission.startDate) &&
+                Objects.equals(endDate, mission.endDate) &&
+                status == mission.status &&
+                Objects.equals(success, mission.success) &&
+                Objects.equals(goal, mission.goal) &&
+                Objects.equals(intergalacticMission, mission.intergalacticMission);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, name, startDate, endDate, status, success, goal, intergalacticMission);
     }
 }

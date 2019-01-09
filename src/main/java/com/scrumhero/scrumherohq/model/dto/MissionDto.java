@@ -2,10 +2,12 @@ package com.scrumhero.scrumherohq.model.dto;
 
 import com.scrumhero.scrumherohq.model.type.MissionStatus;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class MissionDto implements Serializable {
 
@@ -13,7 +15,7 @@ public class MissionDto implements Serializable {
 
     private Long id;
 
-    @NotNull
+    @NotBlank
     @Size(max = 150)
     private String name;
 
@@ -91,5 +93,26 @@ public class MissionDto implements Serializable {
 
     public void setIntergalacticMission(IntergalacticMissionDto intergalacticMission) {
         this.intergalacticMission = intergalacticMission;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MissionDto that = (MissionDto) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(startDate, that.startDate) &&
+                Objects.equals(endDate, that.endDate) &&
+                status == that.status &&
+                Objects.equals(success, that.success) &&
+                Objects.equals(goal, that.goal) &&
+                Objects.equals(intergalacticMission, that.intergalacticMission);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, name, startDate, endDate, status, success, goal, intergalacticMission);
     }
 }
