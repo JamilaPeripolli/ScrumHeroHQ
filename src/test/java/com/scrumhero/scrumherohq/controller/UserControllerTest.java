@@ -101,7 +101,7 @@ public class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = "admin@mail.com")
+    @WithUserDetails(value = "player@mail.com")
     public void updateShouldReturn200() throws Exception {
         Mockito.when(service.update(Mockito.any())).thenReturn(createDto());
 
@@ -117,7 +117,7 @@ public class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = "admin@mail.com")
+    @WithUserDetails(value = "player@mail.com")
     public void updateShouldReturn400WhenNameIsMissing() throws Exception {
         Mockito.when(service.update(Mockito.any())).thenReturn(createDto());
 
@@ -130,7 +130,7 @@ public class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = "admin@mail.com")
+    @WithUserDetails(value = "player@mail.com")
     public void updateShouldReturn400WhenNameIsDuplicated() throws Exception {
         Mockito.when(service.update(Mockito.any())).thenThrow(BadRequestException.class);
 
@@ -142,7 +142,7 @@ public class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = "admin@mail.com")
+    @WithUserDetails(value = "player@mail.com")
     public void updateShouldReturn404WhenResourceIsNotFound() throws Exception {
         Mockito.when(service.update(Mockito.any())).thenThrow(ResourceNotFoundException.class);
 
@@ -154,7 +154,7 @@ public class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = "admin@mail.com")
+    @WithUserDetails(value = "player@mail.com")
     public void getAllShouldReturn200AndBody() throws Exception {
         Mockito.when(service.getAll()).thenReturn(Arrays.asList(createDto()));
 
@@ -168,7 +168,7 @@ public class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = "admin@mail.com")
+    @WithUserDetails(value = "player@mail.com")
     public void getAllShouldReturn200() throws Exception {
         Mockito.when(service.getAll()).thenReturn(new ArrayList<>());
 
@@ -178,7 +178,7 @@ public class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = "admin@mail.com")
+    @WithUserDetails(value = "player@mail.com")
     public void getOneShouldReturn200() throws Exception {
         Mockito.when(service.getById(1L)).thenReturn(createDto());
 
@@ -192,7 +192,7 @@ public class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = "admin@mail.com")
+    @WithUserDetails(value = "player@mail.com")
     public void getOneShouldReturn404WhenResourceIsNotFound() throws Exception {
         Mockito.when(service.getById(1L)).thenThrow(ResourceNotFoundException.class);
 
@@ -202,7 +202,7 @@ public class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = "admin@mail.com")
+    @WithUserDetails(value = "player@mail.com")
     public void deleteShouldReturn204() throws Exception {
         MockHttpServletResponse response = doRequest(USERS_ENDPOINT.concat("/1"), HttpMethod.DELETE, null);
 
@@ -210,7 +210,7 @@ public class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @WithUserDetails(value = "admin@mail.com")
+    @WithUserDetails(value = "player@mail.com")
     public void deleteShouldReturn404WhenResourceIsNotFound() throws Exception {
         Mockito.doThrow(ResourceNotFoundException.class).when(service).delete(1L);
 
