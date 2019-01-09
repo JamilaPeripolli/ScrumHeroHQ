@@ -19,6 +19,13 @@ public class League implements Serializable {
 
     private byte[] avatar;
 
+    public League() {
+    }
+
+    public League(Long id) {
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }

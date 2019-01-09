@@ -3,9 +3,10 @@ package com.scrumhero.scrumherohq.model.dto;
 import com.scrumhero.scrumherohq.model.entity.League;
 import com.scrumhero.scrumherohq.model.type.EvolutionItemStatus;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Objects;
 
 public class EvolutionItemDto implements Serializable {
 
@@ -13,7 +14,7 @@ public class EvolutionItemDto implements Serializable {
 
     private Long id;
 
-    @NotNull
+    @NotBlank
     @Size(max = 150)
     private String title;
 
@@ -21,7 +22,6 @@ public class EvolutionItemDto implements Serializable {
 
     private EvolutionItemStatus status;
 
-    @NotNull
     private League league;
 
     public Long getId() {
@@ -62,5 +62,23 @@ public class EvolutionItemDto implements Serializable {
 
     public void setLeague(League league) {
         this.league = league;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EvolutionItemDto that = (EvolutionItemDto) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(title, that.title) &&
+                Objects.equals(description, that.description) &&
+                status == that.status &&
+                Objects.equals(league, that.league);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, title, description, status, league);
     }
 }

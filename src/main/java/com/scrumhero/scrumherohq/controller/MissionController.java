@@ -29,7 +29,7 @@ public class MissionController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity create(@RequestBody @Valid MissionDto mission) throws BadRequestException {
+    public ResponseEntity create(@RequestBody @Valid MissionDto mission) throws BadRequestException, ResourceNotFoundException {
         LOGGER.debug("Endpoint called: POST '/api/missions'");
 
         return ResponseEntity.status(HttpStatus.CREATED).body(service.save(mission));
