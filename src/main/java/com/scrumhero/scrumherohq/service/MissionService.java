@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface MissionService {
 
-    MissionDto save(MissionDto mission) throws BadRequestException;
+    MissionDto save(MissionDto mission) throws BadRequestException, ResourceNotFoundException;
 
     MissionDto update(MissionDto mission) throws ResourceNotFoundException, BadRequestException;
 

@@ -6,6 +6,7 @@ import com.scrumhero.scrumherohq.model.dto.MissionDto;
 import com.scrumhero.scrumherohq.model.entity.Mission;
 import com.scrumhero.scrumherohq.model.type.MissionStatus;
 import com.scrumhero.scrumherohq.repository.MissionRepository;
+import com.scrumhero.scrumherohq.service.IntergalacticMissionService;
 import com.scrumhero.scrumherohq.service.MissionService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -25,16 +26,20 @@ public class MissionServiceImpl implements MissionService {
 
     private MissionRepository repository;
 
+    private IntergalacticMissionService imService;
+
     private ModelMapper modelMapper;
 
     @Autowired
-    public MissionServiceImpl(MissionRepository repository, ModelMapper modelMapper) {
+    public MissionServiceImpl(MissionRepository repository,
+                              IntergalacticMissionService imService, ModelMapper modelMapper) {
         this.repository = repository;
+        this.imService = imService;
         this.modelMapper = modelMapper;
     }
 
     @Override
-    public MissionDto save(MissionDto mission) throws BadRequestException {
+    public MissionDto save(MissionDto mission) throws BadRequestException, ResourceNotFoundException {
         checkDuplicatedResource(mission);
         validateIntergalacticMission(mission);
 
@@ -112,10 +117,12 @@ public class MissionServiceImpl implements MissionService {
         }
     }
 
-    private void validateIntergalacticMission(MissionDto mission) throws BadRequestException {
+    private void validateIntergalacticMission(MissionDto mission) throws BadRequestException, ResourceNotFoundException {
         if(mission.getIntergalacticMission() == null
                 || mission.getIntergalacticMission().getId() == null) {
             throw new BadRequestException("To create a mission it must be associated to an intergalactic mission. Please provide the required information.");
         }
+
+        imService.getById(mission.getIntergalacticMission().getId());
     }
 }
