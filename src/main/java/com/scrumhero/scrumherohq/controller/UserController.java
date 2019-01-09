@@ -14,6 +14,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/users")
@@ -34,7 +36,10 @@ public class UserController {
 
         LOGGER.debug("Endpoint called: POST '/api/user/signup, new user: {}", user.getEmail());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.save(user));
+        UserDto userDto = service.save(user);
+        userDto.setPassword(null);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(userDto);
     }
 
     @PutMapping("/{id}")
@@ -44,7 +49,10 @@ public class UserController {
 
         user.setId(id);
 
-        return ResponseEntity.ok().body(service.update(user));
+        UserDto userDto = service.update(user);
+        userDto.setPassword(null);
+
+        return ResponseEntity.ok().body(userDto);
     }
 
     @GetMapping
@@ -52,7 +60,10 @@ public class UserController {
     public ResponseEntity getAll() {
         LOGGER.debug("Endpoint called: GET '/api/users'");
 
-        return ResponseEntity.ok().body(service.getAll());
+        List<UserDto> users =  service.getAll();
+        users.stream().forEach(u -> u.setPassword(null));
+
+        return ResponseEntity.ok().body(users);
     }
 
     @GetMapping("/{id}")
@@ -60,7 +71,10 @@ public class UserController {
     public ResponseEntity getOne(@PathVariable Long id) throws ResourceNotFoundException {
         LOGGER.debug("Endpoint called: GET '/api/users/{}'", id);
 
-        return ResponseEntity.ok().body(service.getById(id));
+        UserDto userDto = service.getById(id);
+        userDto.setPassword(null);
+
+        return ResponseEntity.ok().body(userDto);
     }
 
     @DeleteMapping("/{id}")

@@ -27,7 +27,7 @@ import static com.scrumhero.scrumherohq.util.Constants.SECURITY_TOKEN_HEADER;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String LOGIN_ENDPOINT = "/login";
-    private static final String SIGN_UP_ENDPOINT = "/api/user/signup";
+    private static final String SIGN_UP_ENDPOINT = "/api/users/signup";
 
     @Autowired
     private UserDetailsService userDetailsService;

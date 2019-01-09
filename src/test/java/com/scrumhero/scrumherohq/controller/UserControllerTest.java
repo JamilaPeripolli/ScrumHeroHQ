@@ -3,7 +3,6 @@ package com.scrumhero.scrumherohq.controller;
 import com.scrumhero.scrumherohq.config.SecurityTestConfig;
 import com.scrumhero.scrumherohq.exception.BadRequestException;
 import com.scrumhero.scrumherohq.exception.ResourceNotFoundException;
-import com.scrumhero.scrumherohq.fixture.UserFixture;
 import com.scrumhero.scrumherohq.model.dto.UserDto;
 import com.scrumhero.scrumherohq.service.UserService;
 import org.junit.Test;
@@ -18,6 +17,7 @@ import org.springframework.test.context.ContextConfiguration;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static com.scrumhero.scrumherohq.fixture.UserFixture.createDto;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,8 +40,11 @@ public class UserControllerTest extends AbstractControllerTest {
 
         MockHttpServletResponse response = doRequest(USERS_ENDPOINT.concat("/signup"), HttpMethod.POST, createJson(user));
 
+        UserDto expected = createDto();
+        expected.setPassword(null);
+
         assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
-        assertThat(response.getContentAsString()).isEqualTo(createJson(createDto()));
+        assertThat(response.getContentAsString()).isEqualTo(createJson(expected));
     }
 
     @Test
@@ -100,22 +103,25 @@ public class UserControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = "admin@mail.com")
     public void updateShouldReturn200() throws Exception {
-        Mockito.when(service.update(Mockito.any())).thenReturn(UserFixture.createDto());
+        Mockito.when(service.update(Mockito.any())).thenReturn(createDto());
 
-        UserDto user = UserFixture.createDto();
+        UserDto user = createDto();
 
         MockHttpServletResponse response = doRequest(USERS_ENDPOINT.concat("/1"), HttpMethod.PUT, createJson(user));
 
+        UserDto expected = createDto();
+        expected.setPassword(null);
+
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.getContentAsString()).isEqualTo(createJson(UserFixture.createDto()));
+        assertThat(response.getContentAsString()).isEqualTo(createJson(expected));
     }
 
     @Test
     @WithUserDetails(value = "admin@mail.com")
     public void updateShouldReturn400WhenNameIsMissing() throws Exception {
-        Mockito.when(service.update(Mockito.any())).thenReturn(UserFixture.createDto());
+        Mockito.when(service.update(Mockito.any())).thenReturn(createDto());
 
-        UserDto user = UserFixture.createDto();
+        UserDto user = createDto();
         user.setName("");
 
         MockHttpServletResponse response = doRequest(USERS_ENDPOINT.concat("/1"), HttpMethod.PUT, createJson(user));
@@ -128,7 +134,7 @@ public class UserControllerTest extends AbstractControllerTest {
     public void updateShouldReturn400WhenNameIsDuplicated() throws Exception {
         Mockito.when(service.update(Mockito.any())).thenThrow(BadRequestException.class);
 
-        UserDto user = UserFixture.createDto();
+        UserDto user = createDto();
 
         MockHttpServletResponse response = doRequest(USERS_ENDPOINT.concat("/1"), HttpMethod.PUT, createJson(user));
 
@@ -140,7 +146,7 @@ public class UserControllerTest extends AbstractControllerTest {
     public void updateShouldReturn404WhenResourceIsNotFound() throws Exception {
         Mockito.when(service.update(Mockito.any())).thenThrow(ResourceNotFoundException.class);
 
-        UserDto user = UserFixture.createDto();
+        UserDto user = createDto();
 
         MockHttpServletResponse response = doRequest(USERS_ENDPOINT.concat("/1"), HttpMethod.PUT, createJson(user));
 
@@ -150,12 +156,15 @@ public class UserControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = "admin@mail.com")
     public void getAllShouldReturn200AndBody() throws Exception {
-        Mockito.when(service.getAll()).thenReturn(Arrays.asList(UserFixture.createDto()));
+        Mockito.when(service.getAll()).thenReturn(Arrays.asList(createDto()));
 
         MockHttpServletResponse response = doRequest(USERS_ENDPOINT, HttpMethod.GET, null);
 
+        List<UserDto> expected = Arrays.asList(createDto());
+        expected.forEach(u -> u.setPassword(null));
+
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.getContentAsString()).isEqualTo(createJson(Arrays.asList(UserFixture.createDto())));
+        assertThat(response.getContentAsString()).isEqualTo(createJson(expected));
     }
 
     @Test
@@ -171,12 +180,15 @@ public class UserControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = "admin@mail.com")
     public void getOneShouldReturn200() throws Exception {
-        Mockito.when(service.getById(1L)).thenReturn(UserFixture.createDto());
+        Mockito.when(service.getById(1L)).thenReturn(createDto());
 
         MockHttpServletResponse response = doRequest(USERS_ENDPOINT.concat("/1"), HttpMethod.GET, null);
 
+        UserDto expected = createDto();
+        expected.setPassword(null);
+
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        assertThat(response.getContentAsString()).isEqualTo(createJson(UserFixture.createDto()));
+        assertThat(response.getContentAsString()).isEqualTo(createJson(expected));
     }
 
     @Test
