@@ -5,7 +5,6 @@ import com.scrumhero.scrumherohq.exception.BadRequestException;
 import com.scrumhero.scrumherohq.exception.ResourceNotFoundException;
 import com.scrumhero.scrumherohq.model.dto.SuperPowerDto;
 import com.scrumhero.scrumherohq.service.impl.SuperPowerServiceImpl;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;

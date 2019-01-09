@@ -1,91 +1,222 @@
 package com.scrumhero.scrumherohq.controller;
 
+import com.scrumhero.scrumherohq.config.SecurityTestConfig;
+import com.scrumhero.scrumherohq.exception.BadRequestException;
+import com.scrumhero.scrumherohq.exception.ResourceNotFoundException;
 import com.scrumhero.scrumherohq.model.dto.UserDto;
-import com.scrumhero.scrumherohq.model.type.AuthorityType;
 import com.scrumhero.scrumherohq.service.UserService;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.context.ContextConfiguration;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static com.scrumhero.scrumherohq.fixture.UserFixture.createDto;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = { UserController.class })
+@ContextConfiguration(classes = {SecurityTestConfig.class})
 public class UserControllerTest extends AbstractControllerTest {
 
-    private static final String SIGN_UP_ENDPOINT = "/api/user/signup";
+    private static final String USERS_ENDPOINT = "/api/users";
 
     @MockBean
     private UserService service;
 
     @Test
-    public void shouldReturnCreated() throws Exception {
-        UserDto user = createTestUserDto();
-        MockHttpServletResponse response = doRequest(SIGN_UP_ENDPOINT, HttpMethod.POST, createJson(user));
+    public void signupShouldReturn201() throws Exception {
+        Mockito.when(service.save(Mockito.any())).thenReturn(createDto());
+
+        UserDto user = createDto();
+        user.setId(null);
+
+        MockHttpServletResponse response = doRequest(USERS_ENDPOINT.concat("/signup"), HttpMethod.POST, createJson(user));
+
+        UserDto expected = createDto();
+        expected.setPassword(null);
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
+        assertThat(response.getContentAsString()).isEqualTo(createJson(expected));
     }
 
     @Test
-    public void shouldReturnBadRequestWhenMissingName() throws Exception {
-        UserDto user = createTestUserDto();
-        user.setName(null);
+    public void signupShouldReturn400WhenNameIsMissing() throws Exception {
+        UserDto user = createDto();
+        user.setId(null);
+        user.setName("");
 
-        MockHttpServletResponse response = doRequest(SIGN_UP_ENDPOINT, HttpMethod.POST, createJson(user));
+        MockHttpServletResponse response = doRequest(USERS_ENDPOINT.concat("/signup"), HttpMethod.POST, createJson(user));
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     @Test
-    public void shouldReturnBadRequestWhenMissingEmail() throws Exception {
-        UserDto user = createTestUserDto();
-        user.setEmail(null);
+    public void signupShouldReturn400WhenEmailIsMissing() throws Exception {
+        UserDto user = createDto();
+        user.setId(null);
+        user.setEmail("");
 
-        MockHttpServletResponse response = doRequest(SIGN_UP_ENDPOINT, HttpMethod.POST, createJson(user));
+        MockHttpServletResponse response = doRequest(USERS_ENDPOINT.concat("/signup"), HttpMethod.POST, createJson(user));
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     @Test
-    public void shouldReturnBadRequestWhenEmailIsInvalid() throws Exception {
-        UserDto user = createTestUserDto();
+    public void signupShouldReturn400WhenEmailIsInvalid() throws Exception {
+        UserDto user = createDto();
         user.setEmail("t3st&*%@$t3st");
 
-        MockHttpServletResponse response = doRequest(SIGN_UP_ENDPOINT, HttpMethod.POST, createJson(user));
+        MockHttpServletResponse response = doRequest(USERS_ENDPOINT.concat("/signup"), HttpMethod.POST, createJson(user));
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     @Test
-    public void shouldReturnBadRequestWhenMissingPassword() throws Exception {
-        UserDto user = createTestUserDto();
-        user.setPassword(null);
+    public void signupShouldReturn400WhenPasswordIsMissing() throws Exception {
+        UserDto user = createDto();
+        user.setId(null);
+        user.setPassword("");
 
-        MockHttpServletResponse response = doRequest(SIGN_UP_ENDPOINT, HttpMethod.POST, createJson(user));
+        MockHttpServletResponse response = doRequest(USERS_ENDPOINT.concat("/signup"), HttpMethod.POST, createJson(user));
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     @Test
-    public void shouldReturnBadRequestWhenMissingAuthority() throws Exception {
-        UserDto user = createTestUserDto();
+    public void signupShouldReturn400WhenAuthorityIsMissing() throws Exception {
+        UserDto user = createDto();
         user.setAuthority(null);
 
-        MockHttpServletResponse response = doRequest(SIGN_UP_ENDPOINT, HttpMethod.POST, createJson(user));
+        MockHttpServletResponse response = doRequest(USERS_ENDPOINT.concat("/signup"), HttpMethod.POST, createJson(user));
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
-    private UserDto createTestUserDto() {
-        UserDto user = new UserDto();
-        user.setName("player1");
-        user.setEmail("player1@mail.com");
-        user.setPassword("1234");
-        user.setAuthority(AuthorityType.USER);
+    @Test
+    @WithUserDetails(value = "admin@mail.com")
+    public void updateShouldReturn200() throws Exception {
+        Mockito.when(service.update(Mockito.any())).thenReturn(createDto());
 
-        return user;
+        UserDto user = createDto();
+
+        MockHttpServletResponse response = doRequest(USERS_ENDPOINT.concat("/1"), HttpMethod.PUT, createJson(user));
+
+        UserDto expected = createDto();
+        expected.setPassword(null);
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.getContentAsString()).isEqualTo(createJson(expected));
+    }
+
+    @Test
+    @WithUserDetails(value = "admin@mail.com")
+    public void updateShouldReturn400WhenNameIsMissing() throws Exception {
+        Mockito.when(service.update(Mockito.any())).thenReturn(createDto());
+
+        UserDto user = createDto();
+        user.setName("");
+
+        MockHttpServletResponse response = doRequest(USERS_ENDPOINT.concat("/1"), HttpMethod.PUT, createJson(user));
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    @WithUserDetails(value = "admin@mail.com")
+    public void updateShouldReturn400WhenNameIsDuplicated() throws Exception {
+        Mockito.when(service.update(Mockito.any())).thenThrow(BadRequestException.class);
+
+        UserDto user = createDto();
+
+        MockHttpServletResponse response = doRequest(USERS_ENDPOINT.concat("/1"), HttpMethod.PUT, createJson(user));
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    @WithUserDetails(value = "admin@mail.com")
+    public void updateShouldReturn404WhenResourceIsNotFound() throws Exception {
+        Mockito.when(service.update(Mockito.any())).thenThrow(ResourceNotFoundException.class);
+
+        UserDto user = createDto();
+
+        MockHttpServletResponse response = doRequest(USERS_ENDPOINT.concat("/1"), HttpMethod.PUT, createJson(user));
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
+    }
+
+    @Test
+    @WithUserDetails(value = "admin@mail.com")
+    public void getAllShouldReturn200AndBody() throws Exception {
+        Mockito.when(service.getAll()).thenReturn(Arrays.asList(createDto()));
+
+        MockHttpServletResponse response = doRequest(USERS_ENDPOINT, HttpMethod.GET, null);
+
+        List<UserDto> expected = Arrays.asList(createDto());
+        expected.forEach(u -> u.setPassword(null));
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.getContentAsString()).isEqualTo(createJson(expected));
+    }
+
+    @Test
+    @WithUserDetails(value = "admin@mail.com")
+    public void getAllShouldReturn200() throws Exception {
+        Mockito.when(service.getAll()).thenReturn(new ArrayList<>());
+
+        MockHttpServletResponse response = doRequest(USERS_ENDPOINT, HttpMethod.GET, null);
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    @Test
+    @WithUserDetails(value = "admin@mail.com")
+    public void getOneShouldReturn200() throws Exception {
+        Mockito.when(service.getById(1L)).thenReturn(createDto());
+
+        MockHttpServletResponse response = doRequest(USERS_ENDPOINT.concat("/1"), HttpMethod.GET, null);
+
+        UserDto expected = createDto();
+        expected.setPassword(null);
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.getContentAsString()).isEqualTo(createJson(expected));
+    }
+
+    @Test
+    @WithUserDetails(value = "admin@mail.com")
+    public void getOneShouldReturn404WhenResourceIsNotFound() throws Exception {
+        Mockito.when(service.getById(1L)).thenThrow(ResourceNotFoundException.class);
+
+        MockHttpServletResponse response = doRequest(USERS_ENDPOINT.concat("/1"), HttpMethod.GET, null);
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
+    }
+
+    @Test
+    @WithUserDetails(value = "admin@mail.com")
+    public void deleteShouldReturn204() throws Exception {
+        MockHttpServletResponse response = doRequest(USERS_ENDPOINT.concat("/1"), HttpMethod.DELETE, null);
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+    @Test
+    @WithUserDetails(value = "admin@mail.com")
+    public void deleteShouldReturn404WhenResourceIsNotFound() throws Exception {
+        Mockito.doThrow(ResourceNotFoundException.class).when(service).delete(1L);
+
+        MockHttpServletResponse response = doRequest(USERS_ENDPOINT.concat("/1"), HttpMethod.DELETE, null);
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
     }
 
 }

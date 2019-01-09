@@ -91,7 +91,7 @@ public class SuperPowerServiceImplTest {
     }
 
     @Test
-    public void shouldReturnListOfSuperPower() {
+    public void getAllShouldReturnListOfSuperPower() {
         Mockito.when(repository.findAll()).thenReturn(Arrays.asList(create()));
 
         List<SuperPowerDto> result = service.getAll();
@@ -100,7 +100,7 @@ public class SuperPowerServiceImplTest {
     }
 
     @Test
-    public void shouldReturnEmptyList() {
+    public void getAllShouldReturnEmptyList() {
         Mockito.when(repository.findAll()).thenReturn(new ArrayList<>());
 
         List<SuperPowerDto> result = service.getAll();
@@ -109,7 +109,7 @@ public class SuperPowerServiceImplTest {
     }
 
     @Test
-    public void shouldReturnSuperPower() throws ResourceNotFoundException {
+    public void getByIdShouldReturnSuperPower() throws ResourceNotFoundException {
         Mockito.when(repository.findById(1L)).thenReturn(Optional.of(create()));
 
         SuperPowerDto result = service.getById(1L);
@@ -118,14 +118,14 @@ public class SuperPowerServiceImplTest {
     }
 
     @Test(expected = ResourceNotFoundException.class)
-    public void shouldThrowExceptionWhenSuperPowerIsNotFound() throws ResourceNotFoundException {
+    public void getByIdShouldThrowExceptionWhenSuperPowerIsNotFound() throws ResourceNotFoundException {
         Mockito.when(repository.findById(1L)).thenReturn(Optional.empty());
 
         SuperPowerDto result = service.getById(1L);
     }
 
     @Test
-    public void shouldDeleteSuperPower() throws ResourceNotFoundException {
+    public void deleteShouldCallRepository() throws ResourceNotFoundException {
         Mockito.when(repository.findById(1L)).thenReturn(Optional.of(create()));
 
         service.delete(1L);
@@ -134,7 +134,7 @@ public class SuperPowerServiceImplTest {
     }
 
     @Test(expected = ResourceNotFoundException.class)
-    public void shouldThrowExceptionWhenSuperPowerIsNotFoundDuringDeletion() throws ResourceNotFoundException {
+    public void deleteShouldThrowExceptionWhenSuperPowerIsNotFound() throws ResourceNotFoundException {
         Mockito.when(repository.findById(1L)).thenReturn(Optional.empty());
 
         service.delete(1L);

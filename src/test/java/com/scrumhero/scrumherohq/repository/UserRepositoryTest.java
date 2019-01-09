@@ -1,20 +1,22 @@
 package com.scrumhero.scrumherohq.repository;
 
 import com.scrumhero.scrumherohq.model.entity.User;
-import com.scrumhero.scrumherohq.model.type.AuthorityType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Optional;
 
+import static com.scrumhero.scrumherohq.fixture.UserFixture.create;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class UserRepositoryTest {
 
     @Autowired
@@ -24,22 +26,34 @@ public class UserRepositoryTest {
     private UserRepository repository;
 
     @Test
-    public void shouldReturnPlayer() {
-        repository.save(createUser());
-        Optional<User> result = repository.findByEmail("player@test.com");
+    public void findByEmailShouldReturnPlayer() {
+        repository.save(create());
+        Optional<User> result = repository.findByEmail("player@mail.com");
 
-        assertThat(result.get()).isEqualTo(createUser());
+        assertThat(result.get()).isEqualTo(create());
     }
 
     @Test
-    public void shouldReturnEmpty() {
-        Optional<User> result = repository.findByEmail("player@test.com");
+    public void findByEmailShouldReturnEmpty() {
+        Optional<User> result = repository.findByEmail("player@mail.com");
 
         assertThat(result.isPresent()).isFalse();
     }
 
-    private User createUser() {
-        return new User(1L, "player", "player@test.com", "1234", AuthorityType.USER);
+    @Test
+    public void findByEmailWhereIdIsNotEqualsShouldReturnUser() {
+        repository.save(create());
+        Optional<User> result = repository.findByEmailWhereIdIsNotEquals("player@mail.com", 2L);
+
+        assertThat(result.get()).isEqualTo(create());
+    }
+
+    @Test
+    public void findByEmailWhereIdIsNotEqualsShouldReturnEmpty() {
+        repository.save(create());
+        Optional<User> result = repository.findByEmailWhereIdIsNotEquals("player@mail.com", 1L);
+
+        assertThat(result.isPresent()).isFalse();
     }
 
 }
