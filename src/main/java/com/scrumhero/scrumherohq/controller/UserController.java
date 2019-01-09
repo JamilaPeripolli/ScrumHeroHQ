@@ -43,7 +43,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity update(@PathVariable Long id, @RequestBody @Valid UserDto user) throws ResourceNotFoundException, BadRequestException {
         LOGGER.debug("Endpoint called: PUT '/api/user/{}'", id);
 
@@ -56,7 +56,7 @@ public class UserController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity getAll() {
         LOGGER.debug("Endpoint called: GET '/api/users'");
 
@@ -67,7 +67,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity getOne(@PathVariable Long id) throws ResourceNotFoundException {
         LOGGER.debug("Endpoint called: GET '/api/users/{}'", id);
 
@@ -78,7 +78,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity delete(@PathVariable Long id) throws ResourceNotFoundException {
         LOGGER.debug("Endpoint called: DELETE '/api/users/{}'", id);
 
