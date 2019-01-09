@@ -2,6 +2,8 @@ package com.scrumhero.scrumherohq.model.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Objects;
 
 @Entity
 public class League implements Serializable {
@@ -39,5 +41,23 @@ public class League implements Serializable {
 
     public void setAvatar(byte[] avatar) {
         this.avatar = avatar;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        League league = (League) o;
+        return Objects.equals(id, league.id) &&
+                Objects.equals(name, league.name) &&
+                Arrays.equals(avatar, league.avatar);
+    }
+
+    @Override
+    public int hashCode() {
+
+        int result = Objects.hash(id, name);
+        result = 31 * result + Arrays.hashCode(avatar);
+        return result;
     }
 }
