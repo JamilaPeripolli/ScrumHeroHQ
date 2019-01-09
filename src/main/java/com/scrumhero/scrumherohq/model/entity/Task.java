@@ -4,6 +4,7 @@ import com.scrumhero.scrumherohq.model.type.TaskStatus;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 public class Task implements Serializable {
@@ -142,5 +143,30 @@ public class Task implements Serializable {
 
     public void setSuperPower(SuperPower superPower) {
         this.superPower = superPower;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return Objects.equals(id, task.id) &&
+                Objects.equals(title, task.title) &&
+                Objects.equals(description, task.description) &&
+                Objects.equals(notes, task.notes) &&
+                Objects.equals(acceptanceCriteria, task.acceptanceCriteria) &&
+                Objects.equals(priority, task.priority) &&
+                Objects.equals(estimate, task.estimate) &&
+                status == task.status &&
+                Objects.equals(intergalacticMission, task.intergalacticMission) &&
+                Objects.equals(mission, task.mission) &&
+                Objects.equals(player, task.player) &&
+                Objects.equals(superPower, task.superPower);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, title, description, notes, acceptanceCriteria, priority, estimate, status, intergalacticMission, mission, player, superPower);
     }
 }
