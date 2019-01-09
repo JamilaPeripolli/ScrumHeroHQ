@@ -5,7 +5,6 @@ import com.scrumhero.scrumherohq.exception.BadRequestException;
 import com.scrumhero.scrumherohq.exception.ResourceNotFoundException;
 import com.scrumhero.scrumherohq.fixture.UserFixture;
 import com.scrumhero.scrumherohq.model.dto.UserDto;
-import com.scrumhero.scrumherohq.model.dto.UserDto;
 import com.scrumhero.scrumherohq.service.UserService;
 import org.junit.Test;
 import org.mockito.Mockito;
